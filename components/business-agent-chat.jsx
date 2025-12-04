@@ -16,6 +16,18 @@ export function BusinessAgentChat() {
     const [agentResponse, setAgentResponse] = useState('');
     const [status, setStatus] = useState(null);
     const [error, setError] = useState(null);
+    const [copyStatus, setCopyStatus] = useState(null);
+
+    const handleCopyResponse = async () => {
+        try {
+            await navigator.clipboard.writeText(agentResponse);
+            setCopyStatus('success');
+            setTimeout(() => setCopyStatus(null), 2000);
+        } catch (err) {
+            setCopyStatus('error');
+            setTimeout(() => setCopyStatus(null), 2000);
+        }
+    };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -99,12 +111,10 @@ export function BusinessAgentChat() {
                     <div className="p-4 bg-neutral-100 rounded-sm whitespace-pre-wrap">{agentResponse}</div>
                     <button
                         type="button"
-                        onClick={() => {
-                            navigator.clipboard.writeText(agentResponse);
-                        }}
+                        onClick={handleCopyResponse}
                         className="btn mt-4"
                     >
-                        📋 Copy Response
+                        {copyStatus === 'success' ? '✓ Copied!' : copyStatus === 'error' ? '✗ Failed to copy' : '📋 Copy Response'}
                     </button>
                 </Card>
             )}
